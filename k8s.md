@@ -25,7 +25,7 @@
 ### 1.2 K8S 架构设计
 
 - Kubernetes集群： Master组件 和 代理节点
-- ![architecture](/Users/roger/Desktop/k8s-architecture.png)
+- ![architecture](/Users/images/k8s-architecture.png)
 - K8S的核心组件
   - etcd 保存整个集群的状态
   - apiserver 提供了资源操作的唯一入口，并提供认证、授权、访问控制、api注册和发现等机制
