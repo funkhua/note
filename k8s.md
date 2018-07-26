@@ -25,7 +25,7 @@
 ### 1.2 K8S 架构设计
 
 - Kubernetes集群： Master组件 和 代理节点
-- ![architecture](/Users/roger/Downloads/architecture.png)
+- ![architecture](/Users/roger/Desktop/k8s-architecture.png)
 - K8S的核心组件
   - etcd 保存整个集群的状态
   - apiserver 提供了资源操作的唯一入口，并提供认证、授权、访问控制、api注册和发现等机制
@@ -350,7 +350,7 @@ Pod是Kubernetes的基本单位。
 
 每一个Pod都有一个特殊"根容器" Pause 容器。 Pause容器对应的镜像属于k8s的一部分。
 
-![image-20180725151200159](/var/folders/mt/87ps790s7hl4bjb172chz_k40000gn/T/abnerworks.Typora/image-20180725151200159.png)
+![image-20180725151200159](/Users/roger/Desktop/pod-arch.png)
 
 ** 每个Pod都分配了一个唯一的IP地址，称之为Pod IP，一个Pod里的多个容器共享Pod IP地址。 Kubernetes要求底层网络支持集群内任意两个Pod之间的Tcp/IP直接通信，通常采用虚拟二层网络技术来实现，例如：Flannel、Openvswitch**
 
@@ -363,4 +363,4 @@ Pod是Kubernetes的基本单位。
 
 
 
-![image-20180725152838479](/var/folders/mt/87ps790s7hl4bjb172chz_k40000gn/T/abnerworks.Typora/image-20180725152838479.png)
+![image-20180725152838479](/Users/roger/Desktop/pod-docker-node.png)
