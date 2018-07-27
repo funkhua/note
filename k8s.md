@@ -168,7 +168,8 @@ NAME          READY     STATUS              RESTARTS   AGE
 mysql-sdtf4   0/1       ContainerCreating   0          4s
 状态一直是 ContainerCreating
 
-# 查看详细信息
+# 查看详细信息 
+# 注意：Event段：Event是一个事件的记录，记录了事件的最早产生时间、最后重现时间、重复次数、发起者、类型，以及导致此事件的原因等
 kubectl describe pod mysql-sdtf4 
 Name:           mysql-sdtf4
 Namespace:      default
@@ -350,7 +351,7 @@ Pod是Kubernetes的基本单位。
 
 每一个Pod都有一个特殊"根容器" Pause 容器。 Pause容器对应的镜像属于k8s的一部分。
 
-![image-20180725151200159](/Users/roger/Desktop/pod-arch.png)
+![image-20180725151200159](./images/pod-arch.png)
 
 ** 每个Pod都分配了一个唯一的IP地址，称之为Pod IP，一个Pod里的多个容器共享Pod IP地址。 Kubernetes要求底层网络支持集群内任意两个Pod之间的Tcp/IP直接通信，通常采用虚拟二层网络技术来实现，例如：Flannel、Openvswitch**
 
@@ -363,4 +364,73 @@ Pod是Kubernetes的基本单位。
 
 
 
-![image-20180725152838479](/Users/roger/Desktop/pod-docker-node.png)
+![image](./images/pod-docker-node.png)
+
+定义一个Pod
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+    name: first-pod
+    labels:
+      name: tomcat
+spec:
+  containers:
+  - name: tomcat
+    image: kubeguide/tomcat-app:v1
+    ports:
+    - containerPort: 8080
+    env:
+      - name: MYSQL_SERVICE_HOST
+        value: 'mysql'
+      - name: MYSQL_SERVICE_PORT
+        value: '3306'
+```
+
+**说明：**Kind为Pod表明这是一个Pod的定义，metadata里的name属性为Pod的名字，metadata里还能定义资源对象的标签（Label），这里声明first-pod拥有一个name=tomcat的标签（Label）
+
+
+
+​        每个Pod都可以对其能使用的服务器上的计算资源设置限额，当前可以设置限额的计算资源有CPU与Memory两种，其中CPU的资源单位为CPU（Core）的数量，是一个绝对值而非相对值。
+
+​        一个CPU的配额对于绝大多数容器来说是相当大的一个资源配额了，所以，在Kubernetes里，通常以千分之一的CPU配额为最小单位，用m来表示。通常一个容器的CPU配额被定义为100～300m，即占用0.1～0.3个CPU。由于CPU配额是一个绝对值，所以无论在拥有一个Core的机器上，还是在拥有48个Core的机器上，100m这个配额所代表的CPU的使用量都是一样的。与CPU配额类似，Memory配额也是一个绝对值，它的单位是内存字节数。
+
+   在Kubernetes里，一个计算资源进行配额限定需要设定以下两个参数。
+
+- Requests：该资源的最小申请量，系统必须满足要求。
+- Limits：该资源最大允许使用的量，不能被突破，当容器试图使用超过这个量的资源时，可能会被Kubernetes Kill并重启。
+
+资源限制示例：
+
+**限制tomcat容器申请最少0.25个cpu和64Mb内存，运行中最大使用资源0.5个cpu和128Mb内存**
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+    name: first-pod
+    labels:
+      name: tomcat
+spec:
+  containers:
+  - name: tomcat
+    image: kubeguide/tomcat-app:v1
+    resources:
+           requests:
+             memory: "64Mi"
+             cpu: "250m"
+           limits:
+             memory: "128Mi"
+             cpu: "500m"
+    ports:
+    - containerPort: 8080
+    env:
+      - name: MYSQL_SERVICE_HOST
+        value: 'mysql'
+      - name: MYSQL_SERVICE_PORT
+        value: '3306'
+```
+
+![image](./images/pod-around.png)
+
