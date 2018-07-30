@@ -434,3 +434,84 @@ spec:
 
 ![image](./images/pod-around.png)
 
+
+#### Label(标签)
+Label定义：
+- Label形式key=value的键值对
+- Label可以附加到各种资源对象上，例如：Node、Pod、Service、RC等
+- 一个资源对象可以定义任意数量的Label，同一个Label也可以被添加都任意数量的资源对象上
+- Label通常在资源对象被定义时被确定，也可以在对象创建后动态添加或者删除。
+
+常用示例：
+- 版本标签: release: stable, release: canary...
+- 环境标签: environment: dev, environment: qa, environment: production
+- 架构标签: tier: frontend, tier: backend, tier: middleware
+- 分区标签: partition: customerA, partion: customerB
+
+标签选择器：
+- 通过Label Selector(标签选择器)查询和筛选拥有某些Label的资源对象，有两种查询表达式：基于等式的和基于集合的
+    - name=redis-slave：匹配所有具有标签 name=redis-slave的资源对象
+    - env != production: 匹配所有不具有标签 evn=production的资源对象
+    - name in (redis-master, redis-slave)：匹配所有具有标签name=redis-master或者name=redis-slave的资源对象
+    - name notin (php-frontend): 匹配所有不具有name=php-frontend的资源对象
+
+标签选择器使用场景：
+- kube-controller进程通过资源对象RC上定义的Label Selector来筛选要监控Pod副本的数量，从而实现Pod副本的数量始终符合预期设定的全自动控制流程
+- kube-proxy进程通过Service的Label Selector来选择对应Pod，自动建立起每个Service对应的Pod的请求转发路由表，从而实现Service的智能负载均衡机制
+- 通过对某些Node定义特定的Label，并且在Pod定义文件中使用Node Selector标签调度策略，kube-scheduler进程可以实现Pod"定向调度"。
+
+**总结：使用Label可以给对象创建多组标签，Label和LabelSelector共同构成了Kubernetes系统中最核心的应用模型，使得被管理对象能够被精细地分组管理，同时实现了整个集群的高可用性。**
+    
+#### 1.4.5 Replication Controller(RC)
+
+Replication Controller定义：
+- 定义了一个期望的场景，即声明某种Pod的副本数量在任意时刻都符合某个预期值。
+RC的结构：
+- Pod期待的副本数(replicas)
+- 用于筛选目标Pod的Label Selector
+- 当Pod的副本数量小于预期数量的时候，用于创建新Pod的Pod模板(template)
+
+```
+apiVersion: v1
+     kind: ReplicationController
+     metadata:
+       name: frontend
+     spec:
+       replicas: 1
+       selector:
+         tier: frontend
+       template:
+         metadata:
+           labels:
+             app: app-demo
+             tier: frontend
+         spec:
+           containers:
+           - name: tomcat-demo
+             image: tomcat
+             imagePullPolicy: IfNotPresent
+             env:
+             - name: GET_HOSTS_FROM
+               value: dns
+             ports:
+             - containerPort: 80
+```
+**cmd**
+```
+在运行时，修改RC的副本数量，实现Pod动态缩放
+# kubectl scale rc redis-slave --replicas=3
+
+用法：
+# kubectl scale [--resource-version=version] [--current-replicas=count] --replicas=COUNT (-f FILENAME | TYPE NAME)
+[options]
+```
+**注意：删除RC并不会影响通过该RC已创建好的Pod。为了删除所有Pod，可以设置replicas的值为0，然后更新该RC。另外，kubectl提供了stop和delete命令来一次性删除RC和RC控制的全部Pod。**
+
+RC(Replica Set)的特性与作用:
+- 在大多数情况下，我们通过定义一个RC实现Pod的创建过程及副本数量的自动控制。
+- RC里包括完整的Pod定义模板。
+- RC通过Label Selector机制实现对Pod副本的自动控制。
+- 通过改变RC里的Pod副本数量，可以实现Pod的扩容或缩容功能。
+- 通过改变RC里Pod模板中的镜像版本，可以实现Pod的滚动升级功能。
+    
+    
