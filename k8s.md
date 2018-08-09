@@ -513,5 +513,72 @@ RC(Replica Set)的特性与作用:
 - RC通过Label Selector机制实现对Pod副本的自动控制。
 - 通过改变RC里的Pod副本数量，可以实现Pod的扩容或缩容功能。
 - 通过改变RC里Pod模板中的镜像版本，可以实现Pod的滚动升级功能。
-    
-    
+  
+#### 1.4.6 Deployment
+Deployment定义：
+    解决Pod的编排问题。升级版RC
+
+Deployment应用场景：
+- 创建一个deployment对象来生成对应的Replication Set并完成Pod副本的创建过程
+- 检查deployment的状态来看部署动作是否完成(Pod副本数量是否达到预期的值)
+- 更新deployment以创建新的Pod(镜像升级)
+- 如果当前deployment不稳定，则回滚到一个早先的deployment版本
+- 挂起或者恢复一个deployment
+
+#### 1.4.7 Horizontal Pod Autoscaler(HPA)
+HPA定义: 
+    Horizontal Pod Autoscaling 意思是Pod横向自动扩容，与之前的RC、Deployment一样，属于一种k8s的对象资源。通过追踪RC控制的所有目标Pod的负载变化情况，来确定是否需要针对性地调整目标Pod的副本数。
+
+HPA对Pod负载的度量指标：
+- CPUUtilizationPercentage
+- 应用程序自定义的度量指标，比如服务器在每秒内的请求数(TPS或QPS)
+
+示例
+```
+vim hap.yaml
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: php-apache
+  namespace: default
+spec:
+  maxReplicas: 10
+  minReplicas: 1
+  scaleTargetRef:
+    kind: Deployment
+    name: php-apache
+  targetCPUUtilizationPercentage: 90
+
+# kubectl create -f hpa.yaml
+# 查看创建的hpa
+# kubectl get horizontalpodautoscaler
+
+# 通过命令直接创建hpa对象
+# kubectl autoscale deployment php-apache --cpu-percent=90 --min=1 --max=10
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
