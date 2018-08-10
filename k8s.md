@@ -557,10 +557,19 @@ spec:
 # kubectl autoscale deployment php-apache --cpu-percent=90 --min=1 --max=10
 ```
 
+#### Service 服务
+定义：
+- k8s里的每个Service其实就是我们经常提起的微服务框架中的一个“微服务”，之前的Pod RC等资源对象其实都是为service做的嫁衣。
 
+Pod、RC、Service关系：
+![image](./images/Pod-RC-Service.png)
+- Service定义了一个服务的访问入口地址，前端的应用(Pod)通过这个入口地址访问其背后一组由Pod副本组成的集群实例，Service与其后端的Pod副本集群之间则是通过Label Selector来实现对接。而RC的作用实际上保证Service的服务能力和服务质量始终处于预期的标准。
 
+![image](./images/services.png)
+- 系统由多个提供不同业务能力而又彼此独立的微服务单元所组成，服务之间通过TCP/IP进行通信，从而形成了我们强大而又灵活的弹性网格，拥有了强大的分布式能力、弹性扩展能力、容错能力。
 
-
+- 负载均衡器解决客户端请求最终到哪个Pod，在每个Node上运行的kube-proxy进程，其实就是一个智能软件负载均衡器，它负责对Service的请求转发到后端的某个Pod实例上，并在内部实现负载均衡与会话保持机制。
+- 巧妙的设计：Service不是公用一个负载均衡器的IP地址，而是每个Service分配一个全局唯一的虚拟IP地址(Cluster IP)。这样服务就变成了具有唯一IP地址的通信节点，服务调用就变成了最基础的TCP网络通信问题。
 
 
 
