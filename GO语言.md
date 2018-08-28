@@ -324,6 +324,7 @@ switch 表达式 {
   7. switch 后可以不带表达式，类似 if---else 分支来使用
   8. switch 后也可以直接声明/定义一个变量，分号结束，不推荐
   9. switch穿透 fallthrough， 如果在case语句块后增加fallthrough，则会继续执行下一个case
+  10. Type Switch: switch 语句还可以被用于tpye-switch来判断某个interface变量中实际指向的变量类型
 
 
 
