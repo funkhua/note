@@ -44,7 +44,7 @@
     hosts deny = *
     
     [data]
-        path = /data/nexus-data
+        path = /data/web-data
         comment = "back up data"
     ```
 
