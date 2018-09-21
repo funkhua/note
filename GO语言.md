@@ -348,6 +348,7 @@ switch 表达式 {
   }
 
 ```
+用法：
 // 第一种写法
 // 
 	i := 1
@@ -385,8 +386,22 @@ switch 表达式 {
 		}
 		k ++
 	}
+	
+// 第四种： Go提供for-range的方式，可以方便遍历字符串和数组
+// 字符串遍历 传统方式
+	var sss string = "hello world"
+	for i := 0; i < len(sss); i++ {
+		fmt.Printf("%c \n",sss[i])
+	}
+	//字符串遍历 for-range
+	var ss string = "123 456"
+	for index, val := range ss {
+		fmt.Printf("index=%d, val=%c \n", index, val)
+	}
+注意： 如果我们的字符串含有中文，那么传统的遍历字符串方式是错误的，会出现乱码。原因是传统的对字符的遍历是按照字节来遍历，而一个汉字在utf8编码对应的是3个字节
+如何解决 需要将 str 转换成 []rune 切片
+str2 := []rune(str)
 ```
-
 
 
 
