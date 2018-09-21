@@ -372,7 +372,7 @@ switch 表达式 {
 	}
 
 
-// 第三种写法。死循环，一般配合break使用，等价于 for ; ; {...}
+// 第三种写法。死循环，一般配合break使用（类似while或 do...while），等价于 for ; ; {...}
 	 for {
 	 	fmt.Println("aaa")
 	 }
