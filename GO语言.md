@@ -441,6 +441,19 @@ str2 := []rune(str)
 
 
 
+# note
+
+```
+linux
+GOOS=linux GOARCH=amd64 go build -ldflags "-w -s" -o web
+windows
+GOOS=windows GOARCH=amd64 go build -ldflags "-w -s" -o web
+mac
+GOOS=darwin GOARCH=amd64 go build -ldflags "-w -s" -o web
+```
+
+
+
 
 
 
