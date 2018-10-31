@@ -433,6 +433,68 @@ str2 := []rune(str)
 
 #### 5.5 跳转控制 break
 
+- 基本介绍
+
+  break语句用于终止某语句块的执行，用于终端当前的for循环或者跳出switch语句
+
+- 基本语法
+
+  ```
+  {
+   ...
+   break
+   ...
+  }
+  
+  	i := 1
+      for ;; {
+  		// 种子
+  		rand.Seed(time.Now().UnixNano())
+  		//生成随机数
+  		n := rand.Intn(100)+1
+  		i ++
+  		if n == 99 {
+  			break
+  		}
+  	}
+  	fmt.Println(i)
+  ```
+
+- 注意细节
+
+  1. break出现在多层嵌套的语句块时，可以通过标签指明要终止的是哪一层的语句块
+  2. 标签的基本使用
+
+  ```
+  lable1:
+  {
+      lable2:
+      {
+          break lable1
+          //break lable2
+      }
+  }
+  
+  lable1:
+  	for i:=0; i<100; i++ {
+  		lable2:
+  		for j:=0; j<10; j++ {
+  			for n:=0; n<5; n++ {
+  				if i == 80 {
+  					break lable1
+  				} 
+  				if j == 8 {
+  					break lable2
+  				} else {
+  					fmt.Printf("i= %d, j= %d n= %d\n", i, j, n)
+  				}
+  			}
+  		}
+  	}
+  ```
+
+  ​	
+
 
 
 
