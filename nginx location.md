@@ -9,9 +9,9 @@
 
 ###  location匹配
 - 普通前缀匹配
-  - \^~：匹配以指定字符串开头的uri，普通字符匹配，不是正则匹配   location \^~/oms-web
+  - \^\~：匹配以指定字符串开头的uri，普通字符匹配，不是正则匹配   location \^\~/oms-web
   - = ：普通字符精确匹配		location =/
-  - None		       /oms-web
+  - None: /oms-web
 - 正则匹配
   - ~ ：不区分大小写  		location ~\.(gif|jpg|jpeg)$
   - ~\*：区分大小写	                location ~\* \.(gif|jpg|jpeg)$
