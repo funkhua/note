@@ -1,6 +1,6 @@
 
 
-# nginx location
+# nginx location优先级
 
 	Syntax:	location [ = | ~ | ~* | ^~ ] uri { ... }
 	location @name { ... }
@@ -9,14 +9,49 @@
 
 ###  location匹配
 - 普通前缀匹配
-  - \^\~：匹配以指定字符串开头的uri，普通字符匹配，不是正则匹配   location \^\~/oms-web
-  - = ：普通字符精确匹配		location =/
-  - None: /oms-web
+  - ^\~：匹配以指定字符串开头的uri，普通字符匹配，不是正则匹配 
+    ```
+     location ^~/xxx{
+         
+     }
+    ```
+
+  - = ：普通字符精确匹配	
+    ```
+    location =/xxx {
+        
+    }
+    ```
+  - None: 
+    ```
+    location /xxxx {
+        
+    }
+
+    ```
 - 正则匹配
-  - ~ ：不区分大小写  		location ~\.(gif|jpg|jpeg)$
-  - ~\*：区分大小写	                location ~\* \.(gif|jpg|jpeg)$
-- "@" named location
-  - 用于内部重定向
+  - ~ ：不区分大小写
+    ```
+    location ~\.(gif|jpg|jpeg)$ {
+        
+    }
+    ```
+  - ~\*：区分大小写
+    ```
+    location ~* \.(gif|jpg|jpeg)$ {
+        
+    }
+    ```
+- "@" named 用于内部重定向
+   - 用于定义一个 location 块，且该块不能被外部 Client 所访问，只能被 Nginx 内部配置指令所访问，比如 try_files or error_page
+    ```
+    location / {
+     	error_page 404 = @fallback;
+    }
+    location @fallback {
+    	proxy_pass http://backend;
+    }
+    ```
 
 ###  location匹配优先级
 - 普通前缀匹配，按照最长匹配优先，跟在文件中编辑的上下顺序无关；
