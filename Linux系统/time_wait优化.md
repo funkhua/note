@@ -1,8 +1,6 @@
-tcp连接相关
-
 ### 1. tcp介绍
-
 tcp可靠传输主要解决网络问题（延迟高，不稳定等）
+
 ![tcp_conn](../images/tcp_conn.png)
 
 ![tcp_conn_status](../images/tcp_conn_status.png)
@@ -58,39 +56,27 @@ TCP状态码列表，以S指服务器，C指客户端，S&C表示两者，S/C表
   - 网络情况不好时，如果主动方无TIME_WAIT等待，关闭前个连接后，主动方与被动方又建立起新的TCP连接，这时被动方重传或延时过来的FIN包过来后会直接影响新的TCP连接；
   - 旧的TCP连接已经不存在了，系统此时只能返回RST包
 
-#### 4.1 Linux实现的tips
-	Linux使用了一种“子状态”的机制，即在进程退出的时候，单方面发送FIN，然后不等后续的关闭序列即将连接拷贝到一个占用资源更少的TW套接字，状态直接转入TIMW_WAIT，此时记录一个子状态FIN_WAIT_2，接下来的套接字就和原来的属于进程描述符的连接没有关系了。等到新的连接到来的时候，直接匹配到这个主状态为TW，子状态为FIN_WAIT_2的TW连接上，它负责处理FIN，FIN ACK等数据。
+####  Linux实现的tips
+Linux使用了一种“子状态”的机制，即在进程退出的时候，单方面发送FIN，然后不等后续的关闭序列即将连接拷贝到一个占用资源更少的TW套接字，状态直接转入TIMW_WAIT，此时记录一个子状态FIN_WAIT_2，接下来的套接字就和原来的属于进程描述符的连接没有关系了。等到新的连接到来的时候，直接匹配到这个主状态为TW，子状态为FIN_WAIT_2的TW连接上，它负责处理FIN，FIN ACK等数据。
 
-
-
-#### 4.2 tcp连接相关说明
-
-##### tcp_tw_recycle：
-
+#### tcp_tw_recycle：
 ​	回收TIME_WAIT连接
-
 ​	陷阱：当多个客户端通过NAT方式联网并与服务端交互时，服务端看到的是同一个IP，也就是说对服务端而言这些客户端实际上等同于一个，可惜由于这些客户端的时间戳可能存在差异，于是乎从服务端的视角看，便可能出现时间戳错乱的现象，进而直接导致时间戳小的数据包被丢弃。（tcp_tw_recycle和tcp_timestamps导致connect失败问题。同时开启情况下，60s内同一源ip主机socket 请求中timestamp必须是递增的）
 
-##### tcp_tw_reuse：
-
+#### tcp_tw_reuse：
 ​	复用TIME_WAIT连接。TIME_WAIT创建时间必须超过一秒才可能会被复用；二来只有连接的时间戳是递增的时候才会被复用。
-
 ​	使用地方：发起连接方使用。client连接server端，在server端设置无用。php连接数据库时，php为客户端，此时可复用该连接。
-
 ​	如果客户端可控的话，那么在服务端打开[KeepAlive](http://en.wikipedia.org/wiki/HTTP_persistent_connection)，尽可能不让服务端主动关闭连接，而让客户端主动关闭连接
-
 ​	当客户端端等待超过一定时间后自动给服务端发送一个空的报文，如果对方回复了这个报文证明连接还存活着，如果对方没有报文返回且进行了多次尝试都是一样，那么就认为连接已经丢失，客户端就没必要继续保持连接了。
 
-##### KeepAlive:
-
+#### KeepAlive:
 在设置之前我们先来看看KeepAlive都支持哪些设置项
-
 1. KeepAlive默认情况下是关闭的，可以被上层应用开启和关闭
 2. tcp_keepalive_time: KeepAlive的空闲时长，或者说每次正常发送心跳的周期，默认值为7200s（2小时）
 3. tcp_keepalive_intvl: KeepAlive探测包的发送间隔，默认值为75s
 4. tcp_keepalive_probes: 在tcp_keepalive_time之后，没有接收到对方确认，继续发送保活探测包次数，默认值为9（次）
 
-##### Linux内核设置
+#### Linux内核设置
 ```
 KeepAlive默认不是开启的，如果想使用KeepAlive，需要在你的应用中设置SO_KEEPALIVE才可以生效。
 查看当前的配置：
