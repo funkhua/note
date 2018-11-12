@@ -435,7 +435,7 @@ spec:
 ![image](./images/pod-around.png)
 
 
-#### Label(标签)
+#### 1.4.4 Label(标签)
 Label定义：
 - Label形式key=value的键值对
 - Label可以附加到各种资源对象上，例如：Node、Pod、Service、RC等
@@ -461,7 +461,7 @@ Label定义：
 - 通过对某些Node定义特定的Label，并且在Pod定义文件中使用Node Selector标签调度策略，kube-scheduler进程可以实现Pod"定向调度"。
 
 **总结：使用Label可以给对象创建多组标签，Label和LabelSelector共同构成了Kubernetes系统中最核心的应用模型，使得被管理对象能够被精细地分组管理，同时实现了整个集群的高可用性。**
-    
+​    
 #### 1.4.5 Replication Controller(RC)
 
 Replication Controller定义：
@@ -516,7 +516,7 @@ RC(Replica Set)的特性与作用:
   
 #### 1.4.6 Deployment
 Deployment定义：
-    解决Pod的编排问题。升级版RC
+​    解决Pod的编排问题。升级版RC
 
 Deployment应用场景：
 - 创建一个deployment对象来生成对应的Replication Set并完成Pod副本的创建过程
@@ -527,7 +527,7 @@ Deployment应用场景：
 
 #### 1.4.7 Horizontal Pod Autoscaler(HPA)
 HPA定义: 
-    Horizontal Pod Autoscaling 意思是Pod横向自动扩容，与之前的RC、Deployment一样，属于一种k8s的对象资源。通过追踪RC控制的所有目标Pod的负载变化情况，来确定是否需要针对性地调整目标Pod的副本数。
+​    Horizontal Pod Autoscaling 意思是Pod横向自动扩容，与之前的RC、Deployment一样，属于一种k8s的对象资源。通过追踪RC控制的所有目标Pod的负载变化情况，来确定是否需要针对性地调整目标Pod的副本数。
 
 HPA对Pod负载的度量指标：
 - CPUUtilizationPercentage
@@ -557,12 +557,13 @@ spec:
 # kubectl autoscale deployment php-apache --cpu-percent=90 --min=1 --max=10
 ```
 
-#### Service 服务
+#### 1.4.8 Service 服务
 定义：
 - k8s里的每个Service其实就是我们经常提起的微服务框架中的一个“微服务”，之前的Pod RC等资源对象其实都是为service做的嫁衣。
 
 Pod、RC、Service关系：
 ![image](./images/Pod-RC-Service.png)
+
 - Service定义了一个服务的访问入口地址，前端的应用(Pod)通过这个入口地址访问其背后一组由Pod副本组成的集群实例，Service与其后端的Pod副本集群之间则是通过Label Selector来实现对接。而RC的作用实际上保证Service的服务能力和服务质量始终处于预期的标准。
 
 ![image](./images/services.png)
