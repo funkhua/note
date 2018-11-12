@@ -275,15 +275,15 @@ func main() {
 #### 4.3 关系运算符
 - 关系运算符的结果都是bool型，要么是true，要么是false
 - 关系表达式经常在**if结构**的条件中或循环结构的条件中
-  ![image](images/RelationalOperators.png)
+  ![image](../images/RelationalOperators.png)
 #### 4.4 逻辑运算符
 - 用于连接多个条件(一般来讲就是关系表达式)，最终的结果bool值
-  ![image](images/logicalOperators.png)
+  ![image](../images/logicalOperators.png)
 #### 4.5 赋值运算符
 - 赋值运算符就是将某个运算后的值，赋给指定的变量
 #### 4.6 位运算符
 #### 4.7 其他运算符
-![image](images/otherOperators.png)
+![image](../images/otherOperators.png)
 
 ### 5 流程控制
 1. 顺序控制
