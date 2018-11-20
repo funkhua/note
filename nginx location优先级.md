@@ -42,8 +42,9 @@
         
     }
     ```
-- "@" named 用于内部重定向
+- @named 用于内部重定向
    - 用于定义一个 location 块，且该块不能被外部 Client 所访问，只能被 Nginx 内部配置指令所访问，比如 try_files or error_page
+   - “@”前缀定义了命名location。这样的 location 不用于常规请求处理，而是用于请求重定向。它们不能嵌套，也不能包含嵌套location。
     ```
     location / {
      	error_page 404 = @fallback;
