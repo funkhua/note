@@ -493,7 +493,30 @@ str2 := []rune(str)
   	}
   ```
 
-  ​	
+
+- 例子
+
+  ```
+  	// 用户登入3次
+  	var username string 
+  	var pwd string
+  	
+  	for i:=2; i>=0; i-- {
+  		fmt.Println("请输入username")
+  		fmt.Scanln(&username)
+  		fmt.Println("请输入pws")
+  		fmt.Scanf("%s",&pwd)
+  
+  		if username == "roger" && pwd == "123" {
+  			fmt.Println("pass")
+  			break
+  		}
+  
+  		fmt.Println(username, pwd)
+  		fmt.Printf("剩余输入次数: %d \n", i)
+  	}
+  ```
+
 
 
 
