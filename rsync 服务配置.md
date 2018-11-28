@@ -103,6 +103,11 @@ rsync error: some files/attrs were not transferred (see previous errors) (code 2
 注意：如果使用第一种办法，那么在执行完同步后，为了安全，记得将uid和gid修改回来，或修改成nobody
 
 
+目录SRC是否以斜杠结尾，会影响同步的结果：
+--以斜杠结尾：目录DEST里面有 [目录SRC本身]
+--不以斜杠结尾：目录DEST里面有 [目录SRC里面的文件]
+
+
 
 ```
 
