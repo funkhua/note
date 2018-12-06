@@ -76,13 +76,13 @@
 2. 保留一份，不保存历史备份
 
 ``` simple
-# rsync -avzl --delete 192.168.1.108::data /backups/192.168.1.108/data
+# rsync -avz --delete 192.168.1.108::data /backups/192.168.1.108/data
 ```
 
 3. 完全备份，保留历史归档
 
 ``` backup
-# rsync -avzl 192.168.1.108::data /backups/192.168.1.108/$(date +'%y-%m-%d')/data
+# rsync -avz 192.168.1.108::data /backups/192.168.1.108/$(date +'%y-%m-%d')/data
 ```
 
 
@@ -104,10 +104,10 @@ rsync error: some files/attrs were not transferred (see previous errors) (code 2
 
 
 目录SRC是否以斜杠结尾，会影响同步的结果：
---以斜杠结尾：目录DEST里面有 [目录SRC本身]
---不以斜杠结尾：目录DEST里面有 [目录SRC里面的文件]
+--不以斜杠结尾：目录DEST里面有 [目录SRC本身]
+--以斜杠结尾：目录DEST里面有 [目录SRC里面的文件]
 
-
+DEST目录有没有斜杠结尾，无影响
 
 ```
 
