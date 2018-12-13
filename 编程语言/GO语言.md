@@ -431,6 +431,8 @@ switch 表达式 {
 str2 := []rune(str)
 ```
 
+**注：go没有while（do..while）的实现**
+
 #### 5.5 跳转控制 break
 
 - 基本介绍
@@ -519,7 +521,111 @@ str2 := []rune(str)
 
 
 
+#### 5.6 跳转控制语句 continue
 
+- 基本介绍
+
+  continue 语句用于结束本次循环，继续执行下一循环
+
+  continue 语句出现在多层嵌套的循环语句体中时，可以通过标签指明要跳过的是哪一层循环，跟前面的break标签的使用规则一样
+
+- 基本语法
+
+  ```
+  {
+  	...
+      continue
+      ...
+  }
+  当执行到continue时，就不再执行下面的代码，而是直接到循环迭代，进行下一次循环。
+  ```
+
+- 例子：
+
+  ```
+  for i:=0; i<=10; i++ {
+  		if i == 3 {
+  			continue
+  		}
+  		fmt.Printf("i = %d \n", i)
+  	}
+  结果不会输出 i = 3
+  
+  ## 输出基数
+  for j:=1; j<=100; j++ {
+  	if j%2 == 0{
+  		continue
+  	}
+  	fmt.Println(j)
+  }
+  
+  # 统计正数 负数
+  var positive_count int
+  	var negative_count int
+  	var num int
+  	for {
+  		fmt.Println("请输入一个整数：")
+  		fmt.Scanln(&num)
+  
+  		if num == 0 {
+  			break
+  		}
+  
+  		if num > 0 {
+  			positive_count++
+  			continue
+  		}
+  
+  		negative_count++
+  	}
+  
+  	fmt.Printf("positive_count: %d \t negative_count: %d \n",positive_count, negative_count)
+  ```
+
+
+
+#### 5.7 跳转控制语句 goto
+
+- 基本介绍
+
+  1. Go 语言的 goto 语句可以无条件的转移到程序中指定的行
+  2. goto 语句通常与条件语句配合使用。可用来实现条件转移，跳出循环体等功能
+  3. 在 go 程序设计中**一般不主张使用 goto 语句**，以免造成程序流程等混乱，使理解和调试程序产生困难
+
+- 基本用法：
+
+  ```
+  goto label
+  ...
+  label: statement
+  ```
+
+- 例子
+
+  ```
+  var num int
+  fmt.Println("pls input a number：")
+  fmt.Scanln(&num)
+  
+  if num > 10 {
+  	goto label_big
+  }
+  fmt.Println("小")
+  fmt.Println("中")
+  label_big:
+  fmt.Println("大")
+  ```
+
+#### 5.8 跳转控制语句 return
+
+- 基本介绍：
+
+  return使用在方法或者函数中，表示跳出所在的方法或函数
+
+- 说明：
+
+  1. 如果 return 是在普通的函数，则表示跳出该函数，即不再执行函数中return后面代码，终止函数
+  2. 如果 return 是在 main 函数，表示终止 main 函数，也就是说终止程序
 
 
 
