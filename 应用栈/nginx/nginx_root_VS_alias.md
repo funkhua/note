@@ -1,6 +1,6 @@
 ### root VS alias
 
-#### root 
+#### 1. root 
 
 ```
 Syntax: 	root path;
@@ -22,7 +22,7 @@ Context: 	http, server, location, if in location
 
 - root 路径中可以包含变量，`$document_root` 和 `$realpath_root` 除外。
 
-#### alias
+#### 2. alias
 
 ```
 Syntax: 	alias path;
@@ -61,6 +61,14 @@ Context: 	location
       root /data/w3;
   }
   ```
+
+#### 3. 注意:
+
+1. root、alias 的使用范围
+   1. root Context: http, server, location, if in location
+   2. alias Context: location
+2. alias 后面必须要用 “/” 结束，否则会找不到文件，而 root 则对 ”/” 可有可无
+
 
 
 **参考链接:**
