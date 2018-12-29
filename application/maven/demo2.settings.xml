@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+	
+	
+<servers>
+  <server>
+    <id>releases</id>
+    <username>admin</username>
+    <password>admin123</password>
+  </server>
+
+  <server>
+    <id>snapshots</id>
+    <username>admin</username>
+    <password>admin123</password>
+  </server>
+</servers>
+
+<mirrors>
+<!--  注意此处 mirrorOf, mirrorOf会匹配下面的repository的id, 如果匹配就拦截，此处的url生效
+  <mirror>
+    <id>public</id>
+    <name>public maven</name>
+    <url>http://192.168.1.100/repository/public/</url>
+    <mirrorOf>*,!public-archetype</mirrorOf>
+  </mirror>
+-->
+</mirrors>
+
+<profiles>
+  <profile>
+    <id>GlobalProfile</id>
+	<repositories>
+          <repository>
+            <id>public-archetype</id>
+            <name>public-archetype</name>
+            <url>http://192.168.1.100/repository/public-archetype/</url>
+            <releases>
+              <enabled>true</enabled>
+              <updatePolicy>always</updatePolicy>
+              <checksumPolicy>warn</checksumPolicy>
+            </releases>
+            <snapshots>
+              <enabled>true</enabled>
+              <updatePolicy />
+            <checksumPolicy />
+            </snapshots>
+            <layout>default</layout>
+          </repository>
+
+          <repository>
+            <id>public</id>
+            <name>public</name>
+            <url>http://192.168.100/repository/public/</url>
+            <releases>
+              <enabled>true</enabled>
+              <updatePolicy>always</updatePolicy>
+              <checksumPolicy>warn</checksumPolicy>
+            </releases>
+            <snapshots>
+              <!-- 公共库不应该用snapshot版本 -->
+              <enabled>false</enabled>
+              <updatePolicy />
+              <checksumPolicy />
+            </snapshots>
+            <layout>default</layout>
+          </repository>
+	</repositories>
+
+        <pluginRepositories>
+          <pluginRepository>
+            <id>public</id>
+            <name>public</name>
+            <url>http://192.168.1.100/repository/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+  </profile>
+</profiles>
+
+	<activeProfiles>
+		<activeProfile>GlobalProfile</activeProfile>
+	</activeProfiles>
+
+</settings>
