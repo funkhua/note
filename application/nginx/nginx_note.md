@@ -67,3 +67,75 @@ nginx_note
        }
    参考链接：http://nginx.org/en/docs/http/websocket.html
    ```
+
+4. nginx解析缓存问题
+
+   ```
+   // proxy_pass 域名会缓存dns，通过如下设置变量的方式消除缓存
+   
+   server {
+   
+       listen 80;
+   
+       server_name kfpj.guazi.com;
+       index index.php index.htm index.html;
+   
+       root    /data/www/im_h5_pj/;
+   
+       error_page  404  http://www.guazi.com/404.htm;
+   
+       # 指定 resolver 配合 set 变量,消除 dns cache 带来的影响
+       resolver 10.17.1.252 valid=10s;
+       set $imkf_bg_rest http://imkf-bg-rest.guazi-apps.com;
+   
+       location /get_info {
+           proxy_http_version 1.1;
+           proxy_pass $imkf_bg_rest/api/rate/get_info?$args;
+       }
+   
+       location /submit {
+           proxy_http_version 1.1;
+           proxy_pass $imkf_bg_rest/api/rate/submit;
+       }
+   
+       access_log /data/service_logs/nginx/fe_kfpj_access.log misc;
+       error_log  /data/service_logs/nginx/fe_kfpj_error.log;
+   }
+   
+   ```
+
+5. nginx http 跳 https 方式
+
+   ```
+   方式一：添加header头
+   	推荐方式，浏览器缓存发起，注意全域生效，需要全域支持https
+   	add_header Strict-Transport-Security "max-age=31535999";
+   	
+   方式二：通过if判断跳转，有性能损耗
+   	nginx不推荐用if，无论是http还是https都要进行判断
+   	server {
+   		listen 80;
+   		listen 443 ssl;
+   		...
+   		if ( $scheme = http ){
+       		return 301 https://$server_name$request_uri;
+   		}
+   		...
+   	}
+   
+   方式三： 
+   	推荐方式，没有性能损耗
+   	server {
+           listen 80 default_server;
+           listen [::]:80 default_server;
+           server_name _;
+           return 301 https://$host$request_uri;
+   	}
+   	或
+   	server {
+           listen 80 default_server;
+           listen [::]:80 default_server;
+           server_name example.com www.example.com;
+           return 301 https://$server_name$request_uri;
+   	}
+   ```
