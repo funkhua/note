@@ -68,7 +68,7 @@ nginx_note
    参考链接：http://nginx.org/en/docs/http/websocket.html
    ```
 
-4. nginx解析缓存问题
+4. nginx解析缓存问题（待深入）
 
    ```
    // proxy_pass 域名会缓存dns，通过如下设置变量的方式消除缓存
@@ -77,29 +77,29 @@ nginx_note
    
        listen 80;
    
-       server_name kfpj.guazi.com;
+       server_name momo.com;
        index index.php index.htm index.html;
    
-       root    /data/www/im_h5_pj/;
+       root    /data/www/momo/;
    
-       error_page  404  http://www.guazi.com/404.htm;
    
        # 指定 resolver 配合 set 变量,消除 dns cache 带来的影响
-       resolver 10.17.1.252 valid=10s;
-       set $imkf_bg_rest http://imkf-bg-rest.guazi-apps.com;
+       resolver 192.168.1.252 valid=10s;
+       set $momo_bg_rest http://momo-bg-rest.momo.com;
    
+       # 注意此处使用proxy使用变量后，将丢弃 /get_info 后的参数
        location /get_info {
            proxy_http_version 1.1;
-           proxy_pass $imkf_bg_rest/api/rate/get_info?$args;
+           proxy_pass $momo_bg_rest/api/rate/get_info?$args;
        }
    
        location /submit {
            proxy_http_version 1.1;
-           proxy_pass $imkf_bg_rest/api/rate/submit;
+           proxy_pass $momo_bg_rest/api/rate/submit;
        }
    
-       access_log /data/service_logs/nginx/fe_kfpj_access.log misc;
-       error_log  /data/service_logs/nginx/fe_kfpj_error.log;
+       access_log /data/service_logs/nginx/momo_access.log misc;
+       error_log  /data/service_logs/nginx/momo_error.log;
    }
    
    ```
