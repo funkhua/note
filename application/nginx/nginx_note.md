@@ -1,7 +1,5 @@
 nginx_note
 
-
-
 1. nginx反向代理envoy，状态码报 426
 
    ```
@@ -138,4 +136,77 @@ nginx_note
            server_name example.com www.example.com;
            return 301 https://$server_name$request_uri;
    	}
+   ```
+
+6. nginx 状态码 400
+
+   ```
+   如果你的请求中的header都很大，那么应该使用client_header_buffer_size，这样能减少一次内存分配。
+   如果你的请求中只有少量请求header很大，那么应该使用large_client_header_buffers，因为这样就仅需在处理大header时才会分配更多的空间，从而减少无谓的内存空间浪费。
+   ```
+
+7. post 请求request_time 跟 upstream_time 差距大原因
+
+   ```
+   因为nginx会把http request body 缓存住，接收完毕后才会把数据传给后端处理。
+   ```
+
+8. nginx重试的喜与忧
+
+   ```
+   nginx 重试机制相关参数
+   
+   proxy_send_timeout 设置往后端/上游服务器发送请求的超时时间，默认为60s，此超时时间指的是两次成功写操作间隔时间，而不是发送整个请求的超时时间，如果在此超时时间内上游服务器没有接收任何响应，则Nginx关闭此连接。
+   proxy_read_timeout 设置从后端/上游服务器读取响应的超时时间，默认为60s，此超时时间指的是两次成功读操作间隔时间，而不是读取整个响应体的超时时间，如果在此超时时间内上游服务器没有发送任何响应，则Nginx关闭此连接。
+   proxy_connect_timeout 与后端/上游服务器建立连接的超时时间，默认为60s，对于内网高并发服务，请根据需要调整这几个参数，比如内网服务TP999为1s，可以将连接超时设置为100~500毫秒，而读超时可以为1.5~3秒左右。
+   
+   重试条件：
+   Syntax:	proxy_next_upstream error | timeout | invalid_header | http_500 | http_502 | http_503 | http_504 | http_403 | http_404 | http_429 | non_idempotent | off ...;
+   Default: proxy_next_upstream error timeout;
+   Context: http, server, location
+   
+   防止无限重试，重试限制
+   限制请求传递到下一台服务器的时间，0表示关闭这个限制。
+   Syntax: proxy_next_upstream_timeout time;
+   Default: proxy_next_upstream_timeout 0;
+   Context: http, server, location
+   This directive appeared in version 1.7.5.
+   
+   限制将请求传递到下一个服务器的可能尝试次数。0表示关闭这个限制。
+   Syntax:	proxy_next_upstream_tries number;
+   Default: proxy_next_upstream_tries 0;
+   Context: http, server, location
+   This directive appeared in version 1.7.5.
+   
+   重试踩坑
+   比如有这么一个场景：   一个用于导入数据的web页面，上传一个excel，通过读取、处理excel，向数据库中插入数据，处理时间较长（如1分钟），且为同步操作（即处理完成后才返回结果）。暂且不论这种方式的好坏，若nginx配置的响应等待时间（proxy_read_timeout）为30秒，就会触发超时重试，将请求又打到另一台。如果处理中没有考虑到重复数据的场景，就会发生数据多次重复插入！ 或者发送短信的业务功能,发送的业务时间超时，也会引起发送了多条的短信信息；
+   
+   #控制retry
+   fail_timeout=10s;
+   
+   upstream backend {
+       server backend1;
+       server backend2;
+   }
+   
+   server {
+       server_name proxy;
+       location / {
+           error_page 598 = @retry;
+           error_page 599 = @no_retry;
+           if ($request_method = POST) {
+               return 599;
+           }
+           return 598;
+       }
+   
+       location @retry {
+           proxy_pass http://backend;
+       }
+   
+       location @no_retry {
+           proxy_pass http://backend;
+           proxy_next_upstream off;
+       }
+   }
    ```
