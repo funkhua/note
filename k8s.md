@@ -170,7 +170,8 @@ mysql-sdtf4   0/1       ContainerCreating   0          4s
 
 # 查看详细信息 
 # 注意：Event段：Event是一个事件的记录，记录了事件的最早产生时间、最后重现时间、重复次数、发起者、类型，以及导致此事件的原因等
-kubectl describe pod mysql-sdtf4 
+
+# kubectl describe pod mysql-sdtf4 
 Name:           mysql-sdtf4
 Namespace:      default
 Node:           127.0.0.1/127.0.0.1

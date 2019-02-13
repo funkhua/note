@@ -911,8 +911,157 @@ fun 函数名 (形参列表) (返回值列表) {
 #### 6.8 函数注意事项和细节讨论
 
 1. 函数的形参列表可以是多个，返回值列表也可以是多个
+
 2. 形参列表和返回值列表的数据类型可以是值类型和引用类型
-3. 
+
+3. 函数命名规范遵循标识符命名规范，首字母不能是数字，**首字母大写该函数可以被本包文件和其他包文件使用，类似public，首字母小写只能被本包文件使用，其他包不能使用，类似于private**
+
+4. 函数中的变量是局部的，函数外不生效
+
+5. 基本数据类型和数组默认都是值传递，即进行值拷贝。在函数内修改不影响到原来的值
+
+   ```
+   func test (n1 float64) {
+   	n1 = n1 + 1
+   	fmt.Println("test() n1 = ", n1)
+   }
+   func main() {
+   	n1 := 1.2
+   	test(n1)
+   	fmt.Println("main() n1 = ", n1)
+   }
+   ----
+   test() n1 =  2.2
+   main() n1 =  1.2
+   ```
+
+6. 如果函数内到变量需要修改函数外的变量，可以传入变量的地址&，函数内以指针的方式操作变量，从效果上看类似引用，
+
+   ```
+   func test (n1 *float64) {
+   	*n1 = *n1 + 1
+   	fmt.Println("test() n1 = ", *n1)
+   }
+   
+   func main() {
+   	n1 := 1.2
+   	test(&n1)
+   	fmt.Println("main() n1 = ", n1)
+   }
+   ----
+   test() n1 =  2.2
+   main() n1 =  2.2
+   ```
+
+7. golang不支持函数重载
+
+8. 在go中，函数也是一种数据类型，可以赋值给一个变量，则该变量就是一个函数类型的变量了。通过该变量可以对函数进行调用。
+
+   ```
+   // 函数可以是一种数据类型，赋值给变量使用
+   func getSum(n1 int, n2 int) int {
+   	return n1+n2
+   }
+   
+   func main() {
+   	// 函数赋值
+   	aa := getSum
+   	fmt.Printf("a 的类型 %T; getSum的类型 %T\n", aa, getSum)
+   	res := aa(10, 20) //等价于 res := getSum(10, 20)
+   	fmt.Println("getSum:",res)
+   }
+   -----
+   a 的类型 func(int, int) int; getSum的类型 func(int, int) int
+   getSum: 30
+   ```
+
+9. 函数既然是一种数据类型，因此在go中函数可以作为形参传入，并调用
+
+   ```
+   // 函数可以是一种数据类型，赋值给变量使用
+   func getSum(n1 int, n2 int) int {
+   	return n1+n2
+   }
+   
+   // 函数作为形式参数，并调用
+   func argsFun( funvar func(int, int) int, n1 int, n2 int) int {
+   	return funvar(n1, n2)
+   }
+   func main() {
+   	// 函数作为形参传入，并掉调用
+   	res2 :=argsFun(getSum, 1, 2)
+   	fmt.Println("函数作为形参传入，argsFun 结果 res2 = ", res2 )
+   }
+   -----
+   函数作为形参传入，argsFun 结果 res2 =  3
+   ```
+
+10. 为了简化数据类型定义，go 支持自定义数据类型
+
+    ```
+    基本语法：
+    type 自定义数据类型名 数据类型
+    // 可以理解为： 相当于一个别名
+    示例：
+    type myInt int // 这里的myInt就等价于 int 来使用
+    type funvar func(int, int) int // 这里的 funvar 类型就等价于 func(int, int) int 函数类型
+    
+    1.
+    func main () {
+    	// 自定义数据类型
+    	// 给int取别名，在go中 myInt 和 int 虽然都是int类型，但是go认为 myInt 和 int 是两个类型
+    	type myInt int
+    
+    	var inum1 myInt
+    	var inum2 int 
+    	inum1 = 10
+    	//不能直接 inum2 = inum1, 需要显示转换
+    	inum2 = int(inum2)
+    	fmt.Println("inum1=", inum1, "inum2=", inum2)
+    }
+    -----
+    inum1= 10 inum2= 0
+    
+    2.
+    type funcvars func(int, int) int
+    func argsFun2(funcvar funcvars, n1 int, n2 int) int {
+    	return funcvar(n1, n2)
+    }
+    func main () {
+    	res3 :=argsFun2(getSum, 1, 20)
+    	fmt.Println("函数作为形参传入，argsFun2 结果 res3 = ", res3 )	
+    }
+    ----
+    函数作为形参传入，argsFun2 结果 res3 =  21
+    ```
+
+11. 支持对函数返回值命名，按顺序返回
+
+    ```
+    // 对函数返回值命名
+    func nameFuncSumAndSub (n1 int, n2 int) (sum int, sub int) {
+    	sum = n1 + n2
+    	sub = n1 - n2
+    	return
+    }
+    func main () {
+    	// 命名函数返回值
+    	na, nb:= nameFuncSumAndSub(5, 3)
+    	fmt.Printf("na = %v nb = %v", na, nb)
+    }
+    ------
+    na = 8 nb = 2
+    ```
+
+    
+
+12. a
+
+13. 
+
+    
+
+
 
  
 
