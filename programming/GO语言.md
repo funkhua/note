@@ -1053,13 +1053,134 @@ fun 函数名 (形参列表) (返回值列表) {
     na = 8 nb = 2
     ```
 
+12. 使用 _标识符，忽略返回值
+
+    ```
+    func nameFuncSumAndSub (n1 int, n2 int) (sum int, sub int) {
+    	sum = n1 + n2
+    	sub = n1 - n2
+    	return
+    }
+    func main () {
+    	na, _:= nameFuncSumAndSub(5, 3)
+    	fmt.Printf("na = %v\n", na)
+    }
+    ------
+    na = 8
+    ```
+
+13. Go 支持可变参数
+
+    - 语法
+
+      ```
+      // 支持0到多个参数
+      func sum(args... int) sum int {
+      }
+      // 支持1到多个参数
+      func sum(n1 int, args... int) sum int {
+      }
+      ```
+
+    - 说明：
+
+      - args是slice切片，通过args[index] 可以访问到各个值
+      - 如果一个函数的形参列表中有可变参数，则可变参数需要放到形参列表最后
+
+    - 示例
+
+      ```
+      // 可变参数的使用
+       func sumArgs (n1 int, args... int) int {
+      	 sum := n1 
+      	 //遍历 args
+      	 for i:=0; i<len(args); i++ {
+      		 sum += args[i]
+      	 }
+      	 return sum
+       }
+       func main () {
+       	//可变参数
+      	saa := sumArgs(1,2,3)
+      	fmt.Println("args sum = ", saa)
+      }
+      
+      
+      ```
+
+    ```
+    注意：Go语言中所有的传参都是值传递（传值），都是一个副本，一个拷贝。因为拷贝的内容有时候是非引用类型（int、string、struct等这些），这样就在函数中就无法修改原内容数据；有的是引用类型（指针、map、slice、chan等这些），这样就可以修改原内容数据。
+    
+    是否可以修改原内容数据，和传值、传引用没有必然的关系。在C++中，传引用肯定是可以修改原内容数据的，在Go语言里，虽然只有传值，但是我们也可以修改原内容数据，因为参数是引用类型。
+    
+    这里也要记住，引用类型和传引用是两个概念。
+    再记住，Go里只有传值（值传递，看传递的是 基本数据类型，还是引用数据类型
+    
+    函数练习，交换两个值
+    func swap(n1, n2 *int) {
+    	tmp := *n1
+    	*n1 = *n2
+    	*n2 = tmp
+    }
+    
+    func main() {
+    	aa := 10
+    	bb := 15
+    	fmt.Printf("aa=%v, bb=%v\n", aa, bb)
+    	swap(&aa,&bb)
+    	fmt.Printf("aa=%v, bb=%v\n", aa, bb)
+    }
+    ```
+#### 6.9 init函数
+
+- 每一个源文件都可以包含一个init函数，该函数会在main函数执行之前，被go运行框架调用，也就是说init函数会在main函数之前被调用。
+
+  ```
+  // init 函数，通常在init函数中完成初始化工作
+  func init () {
+  	fmt.Println("init() ...")
+  }
+  func main() {
+  	fmt.Println("main() ...")
+  }
+  ```
+
+- init 函数的注意事项和细节
+
+  - 如果一个文件同时包含全局变量定义、init函数、main函数，则执行的流程是：变量定义--> init函数 --> main 函数
+
+    ```
+    // 验证执行流程
+    var global = testGloVars()
+    
+    func testGloVars() string {
+    	fmt.Println("testGloVars()...")
+    	return "global vars"
+    }
+    
+    // init 函数，通常在init函数中完成初始化工作
+    func init () {
+    	fmt.Println("init() ...")
+    }
+    
+    func main() {
+    	fmt.Println("main() ...", global)
+    }
+    ----
+    testGloVars()...
+    init() ...
+    main() ... global vars
+    ```
+
     
 
-12. a
+  - init函数最主要的作用，就是完成一些初始化工作
 
-13. 
+  - 如果main.go和utils.go都含有 变量定义、init函数时，执行流程：
 
-    
+    ![image-20190215181937782](../images/go_6_9_init.png)
+
+​    
 
 
 
