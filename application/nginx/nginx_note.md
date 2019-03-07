@@ -210,3 +210,26 @@ nginx_note
        }
    }
    ```
+
+9.  414 400
+
+   ```
+   Syntax: 	large_client_header_buffers number size;
+   Default: 	large_client_header_buffers 4 8k;
+   Context: 	http, server
+   
+   设置用于读取大型客户端请求标头的缓冲区的最大数量和大小。请求行不能超过一个缓冲区的大小，否则会将414（Request-URI Too Large）错误返回给客户端。请求头字段也不能超过一个缓冲区的大小，或者400（错误请求）错误返回给客户端。缓冲区仅按需分配。默认情况下，缓冲区大小等于8K字节。如果在请求处理结束后连接转换为保持活动状态，则释放这些缓冲区。
+   ```
+
+10. 请求实体大 413
+
+    ```
+    Syntax: 	client_max_body_size size;
+    Default: 	client_max_body_size 1m;
+    Context: 	http, server, location
+    设置客户端请求正文的最大允许大小，在“Content-Length”请求标头字段中指定。如果请求中的大小超过配置的值，则会将413（请求实体太大）错误返回给客户端。请注意，浏览器无法正确显示此错误。将大小设置为0将禁用检查客户端请求正文大小。
+    ```
+
+11. Ntpd
+
+    在开机的时候，使用ntpdate强制同步时间，在其他时候使用ntpd服务来同步时间。要注意的是，ntpd有一个自我保护设置: 如果本机与上源时间相差太大, ntpd不运行. 所以新设置的时间服务器一定要先ntpdate从上源取得时间初值, 然后启动ntpd服务。ntpd服务运行后, 先是每64秒与上源服务器同步一次, 根据每次同步时测得的误差值经复杂计算逐步调整自己的时间, 随着误差减小, 逐步增加同步的间隔. 每次跳动, 都会重复这个调整的过程.

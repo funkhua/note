@@ -49,3 +49,16 @@ kong:1.0rc3
 
 ```
 
+
+## rpm 安装
+# wget https://bintray.com/kong/kong-community-edition-rpm/download_file?file_path=centos/7/kong-community-edition-1.0.3.el7.noarch.rpm
+# mv download_file\?file_path\=centos%2F7%2Fkong-community-edition-1.0.3.el7.noarch.rpm kong.rpm
+# yum install kong.rpm
+# rpm -ql kong-community-edition
+# yum install docker-ce
+# systemctl start docker && systemctl enable docker
+# docker run -d --name kong-database  -p 5432:5432 -e "POSTGRES_USER=kong" -e "POSTGRES_DB=kong" postgres:9.6
+## 数据库初始化
+# kong migrations bootstrap
+# kong start
+# curl -I http://localhost:8001/
