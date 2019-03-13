@@ -107,14 +107,14 @@ request_terminate_timeout = 30
 - 由于子进程退出--->nginx报错
 
 ```
-2018/08/23 11:53:11 [error] 31784#31784: *818647074 recv() failed (104: Connection reset by peer) while reading response header from upstream, client: 10.100.100.100, server: null.guazi.com, request: "POST /api/account/queryFlow HTTP/1.1", upstream: "fastcgi://10.100.100.102:9001", host: "null.guazi-corp.com"
+2018/08/23 11:53:11 [error] 31784#31784: *818647074 recv() failed (104: Connection reset by peer) while reading response header from upstream, client: 10.100.100.100, server: null.gg.com, request: "POST /api/account/queryFlow HTTP/1.1", upstream: "fastcgi://10.100.100.102:9001", host: "null.gg-corp.com"
 
 ```
 
 - 结果 nginx返回502
 
 ```
-- - 10.100.100.100 null.guazi-corp.com 10.100.100.101 - [23/Aug/2018:11:53:11 +0800] "POST /api/account/queryFlow HTTP/1.1" 31.078 "31.078" 502 170 "-" "Java/1.8.0_144" [10.100.100.102:9001] [31.078] [502]
+- - 10.100.100.100 null.gg-corp.com 10.100.100.101 - [23/Aug/2018:11:53:11 +0800] "POST /api/account/queryFlow HTTP/1.1" 31.078 "31.078" 502 170 "-" "Java/1.8.0_144" [10.100.100.102:9001] [31.078] [502]
 ```
 
 #### 结论
